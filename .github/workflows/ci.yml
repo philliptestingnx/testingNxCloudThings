@@ -37,9 +37,13 @@ jobs:
       - name: Wait for the server
         run: npx wait-on http://localhost:4200 --timeout=40000
 
-      # Step 6: Run Cypress tests
-      - name: Run Cypress tests
-        run: npx nx e2e crew-e2e --headless
+      # # Step 6: Run Cypress tests
+      # - name: Run Cypress tests
+      #   run: npx nx e2e crew-e2e --headless
+
+      - name: Run Affected E2E tests
+        run: npx nx affected --target=e2e -- --headless
+
 
       # Step 7: Stop the server
       - name: Stop the server

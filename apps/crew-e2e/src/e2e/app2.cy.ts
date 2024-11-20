@@ -13,7 +13,7 @@ describe('crew-e2e (2)', () => {
     getGreeting().contains(/Welcome/);
   });
 
-  it('should display welcome message (second)', () => {
+  it('should display welcome message.... (second)', () => {
     // Custom command example, see `../support/commands.ts` file
     cy.login('my-email@something.com', 'myPassword');
 
