@@ -33,10 +33,6 @@ jobs:
       - name: Start the server
         run: npx nx serve crew
 
-      # Step 5: Wait for the server to be ready
-      - name: Wait for the server to be ready
-        run: npx wait-on http://localhost:4200
-
       # Step 6: Run Cypress tests
       - name: Run Cypress tests
         run: npx nx e2e crew-e2e --headless
