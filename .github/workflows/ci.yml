@@ -29,10 +29,19 @@ jobs:
       # Step 3: Install dependencies
       - run: npm ci --legacy-peer-deps
 
-      # Step 4: Start the server in the background
-      - name: Start the server
-        run: npx nx serve crew
+      # Step 4: Start the development server in the background
+      - name: Start the development server
+        run: npx nx serve crew > server.log 2>&1 &
+
+      # Step 5: Wait for the server to be ready
+      - name: Wait for the server
+        run: npx wait-on http://localhost:4200 --timeout=30000
 
       # Step 6: Run Cypress tests
       - name: Run Cypress tests
         run: npx nx e2e crew-e2e --headless
+
+      # Step 7: Stop the server
+      - name: Stop the server
+        if: always()
+        run: pkill -f "nx serve"
