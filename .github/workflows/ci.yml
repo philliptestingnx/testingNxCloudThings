@@ -2,31 +2,38 @@ name: CI
 on:
   push:
     branches:
-      # Change this if your primary branch is not main
       - main
   pull_request:
-
-# Needed for nx-set-shas when run on the main branch
-permissions:
-  actions: read
-  contents: read
+    branches:
+      - main
 
 jobs:
-  main:
+  e2e-tests:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout code
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      # Step 2: Set up Node.js
       - uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: 'npm'
-      # This line enables distribution
-      # The "--stop-agents-after" is optional, but allows idle agents to shut down once the "e2e-ci" targets have been requested
-      # - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
-      - run: npm ci --legacy-peer-deps
 
-      - uses: nrwl/nx-set-shas@v4
-      - run: npx nx build crew
-      - run: npx nx e2e crew-e2e
+      # Step 3: Install dependencies
+      - run: npm ci
+
+      # Step 4: Start the server
+      - name: Start the server
+        run: npx nx serve crew --configuration=production
+        background: true
+
+      # Step 5: Wait for the server to be ready
+      - name: Wait for the server to be ready
+        run: npx wait-on http://localhost:4200
+
+      # Step 6: Run Cypress tests
+      - name: Run Cypress tests
+        run: npx nx e2e crew-e2e --headless

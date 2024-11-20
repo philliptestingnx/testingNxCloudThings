@@ -3,7 +3,7 @@ import {defineConfig} from 'cypress';
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:4201',
+    baseUrl: 'http://localhost:4200',
     ...nxE2EPreset(__filename, {
       cypressDir: 'src',
       webServerCommands: {default: 'nx run crew:serve'},
