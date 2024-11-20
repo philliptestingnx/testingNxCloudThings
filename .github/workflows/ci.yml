@@ -31,11 +31,11 @@ jobs:
 
       # Step 4: Start the server in the background
       - name: Start the server
-        run: npx nx serve crew --configuration=production &
+        run: npx nx serve crew
 
       # Step 5: Wait for the server to be ready
       - name: Wait for the server to be ready
-        run: npx wait-on http://localhost:4201
+        run: npx wait-on http://localhost:4200
 
       # Step 6: Run Cypress tests
       - name: Run Cypress tests
