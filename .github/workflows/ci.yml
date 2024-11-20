@@ -28,5 +28,5 @@ jobs:
       - run: npm ci --legacy-peer-deps
 
       - uses: nrwl/nx-set-shas@v4
-      - run: npx build crew
+      - run: npx nx build crew
       - run: npx nx e2e crew-e2eß
