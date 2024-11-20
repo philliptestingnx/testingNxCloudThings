@@ -29,4 +29,4 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v4
       - run: npx nx build crew
-      - run: npx nx e2e crew-e2eß
+      - run: npx nx e2e crew-e2e
