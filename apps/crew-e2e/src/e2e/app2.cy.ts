@@ -16,7 +16,7 @@ describe('crew-e2e (2)', () => {
   it('should display welcome message.... (second)', () => {
     // Custom command example, see `../support/commands.ts` file
     cy.login('my-email@something.com', 'myPassword');
-    console.log("testing")
+    console.log("testing something")
 
     cy.wait(20000); // simulate slow test
 
