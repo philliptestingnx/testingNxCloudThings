@@ -29,23 +29,38 @@ jobs:
       # Step 3: Install dependencies
       - run: npm ci --legacy-peer-deps
 
-      # Step 4: Start the development server in the background
-      - name: Start the development server
-        run: npx nx serve crew > server.log 2>&1 &
+      # Step 4: Get the affected projects
+      - name: Get affected projects
+        id: affected_projects
+        run: |
+          npx nx print-affected --target=e2e --select=projects > affected.txt
+          echo "Affected Projects: $(cat affected.txt)"
 
-      # Step 5: Wait for the server to be ready
-      - name: Wait for the server
-        run: npx wait-on http://localhost:4200 --timeout=40000
+      # Step 5: Start servers for affected projects
+      - name: Start servers for affected projects
+        run: |
+          while IFS= read -r project; do
+            echo "Starting server for $project"
+            npx nx serve $project > $project-server.log 2>&1 &
+          done < affected.txt
 
-      # # Step 6: Run Cypress tests
-      # - name: Run Cypress tests
-      #   run: npx nx e2e crew-e2e --headless
+      # Step 6: Wait for the servers to be ready
+      - name: Wait for servers
+        run: |
+          while IFS= read -r project; do
+            echo "Waiting for $project server"
+            npx wait-on http://localhost:4200 --timeout=40000 # Adjust the port if different for each project
+          done < affected.txt
 
-      - name: Run Affected E2E tests
-        run: npx nx affected -t e2e
+      # Step 7: Run E2E tests for affected projects
+      - name: Run E2E tests for affected projects
+        run: |
+          while IFS= read -r project; do
+            echo "Running E2E tests for $project"
+            npx nx e2e $project --headless
+          done < affected.txt
 
-
-      # Step 7: Stop the server
-      - name: Stop the server
+      # Step 8: Stop all servers
+      - name: Stop all servers
         if: always()
         run: pkill -f "nx serve"
