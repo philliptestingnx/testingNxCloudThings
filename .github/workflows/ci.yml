@@ -42,7 +42,7 @@ jobs:
       #   run: npx nx e2e crew-e2e --headless
 
       - name: Run Affected E2E tests
-        run: npx nx affected --target=e2e -- --headless
+        run: npx nx affected -t e2e
 
 
       # Step 7: Stop the server
